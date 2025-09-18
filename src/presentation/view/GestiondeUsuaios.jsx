@@ -105,7 +105,7 @@ export default function UserManagementView() {
             return (
                 (u.username || "").toLowerCase().includes(searchTerm) ||
                 (u.email || "").toLowerCase().includes(searchTerm) ||
-                (u.rol || "").toLowerCase().includes(searchTerm) ||
+                (u.role || "").toLowerCase().includes(searchTerm) ||
                 (u.status || "").toLowerCase().includes(searchTerm)
             );
         });

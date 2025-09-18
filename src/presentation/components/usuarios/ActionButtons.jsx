@@ -13,7 +13,7 @@ export default function ActionButtons({ onSuspend, usersToExport, sortBy, setSor
     const data = usersToExport.map((user) => ({
       Usuario: user.username || "",
       Email: user.email || "",
-      Rol: user.rol || "",
+      Rol: user.role || "",
       Estado: user.status || "",
       Telefono: user.phoneNumber || "",
       Municipio: user.municipality || "",
@@ -66,7 +66,7 @@ export default function ActionButtons({ onSuspend, usersToExport, sortBy, setSor
           >
             <option value="">Ordenar por...</option>
             <option value="username">Nombre</option>
-            <option value="rol">Rol</option>
+            <option value="role">Rol</option>
           </select>
         </div>
         <div className="col-6">

@@ -1,7 +1,7 @@
 // src/domain/entities/User.js
 
 export class User {
-  constructor({ id = null, username, email, phoneNumber, municipality, soilTypes,status, rol }) {
+  constructor({ id = null, username, email, phoneNumber, municipality, soilTypes,status, role }) {
     this.id = id;
     this.username = username;
     this.email = email;
@@ -9,7 +9,7 @@ export class User {
     this.municipality = municipality;
     this.soilTypes = soilTypes;
     this.status = status;
-    this.rol = rol;
+    this.role = role;
   }
 
   // Convierte la entidad a un objeto plano (para Firebase u otros repositorios)
@@ -22,7 +22,7 @@ export class User {
       municipality: this.municipality,
       soilTypes: this.soilTypes,
       status: this.status,
-      rol: this.rol,
+      role: this.role,
     };
   }
 
