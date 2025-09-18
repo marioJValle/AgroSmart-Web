@@ -1,7 +1,7 @@
 
-import { News } from '../../domain/model/News';
-import { NewsRepositoryImpl } from '../../data/repositories/NewsRepository/NewsRepository';
-import { CreateNews } from '../../domain/useCases/newsUseCases/CreateNews';
+import { News } from '../../../domain/model/News';
+import { NewsRepositoryImpl } from '../../../data/repositories/NewsRepository/NewsRepository';
+import { CreateNews } from '../../../domain/useCases/newsUseCases/CreateNews';
 import { useState } from 'react';
 
 
