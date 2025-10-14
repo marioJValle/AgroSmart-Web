@@ -91,7 +91,7 @@ const Header = () => {
   };
 
   return (
-    <header className="navbar navbar-expand-lg navbar-light bg-light fixed-top">
+    <header className="navbar navbar-expand-lg navbar-light" style={{ backgroundColor: '#E2FF36' }}>
       <div className="container">
         <a className="navbar-brand" href="#">
           <img src={logo} alt="AgroSmart Logo" style={{ height: "40px" }} />
