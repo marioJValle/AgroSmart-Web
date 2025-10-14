@@ -2,7 +2,7 @@ import React from 'react';
 
 const Footer = () => {
   return (
-    <footer className="footer bg-dark text-white text-center py-3">
+        <footer className="footer text-white text-center py-3" style={{ backgroundColor: '#4AD32D' }}>
       <div className="container">
         <p>&copy; 2025 AGROSMART. Detección de deficiencias nutricionales.</p>
       </div>
