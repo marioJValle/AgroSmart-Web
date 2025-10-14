@@ -3,10 +3,8 @@ import SearchBar from "../components/usuarios/SearchBar";
 import UserStatesCards from "../components/usuarios/UserStatesCard";
 import ActionButtons from "../components/usuarios/ActionButtons";
 import UserManagementTable from "../components/usuarios/UserManagementTable";
-import Footer from "../components/landing/Footer";
 import { UserRepository } from "../../data/repositories/userRepository/UserRepository";
 import { GetAllUsers } from "../../domain/useCases/userUseCases/GetAllUsers";
-import Header from "../components/landing/Header";
 
 
 
@@ -165,7 +163,6 @@ export default function UserManagementView() {
 
     return (
         <div>
-            <Header />
             <div className="container mt-4">
                 <h3 className="mb-4">Gestión de usuario</h3>
                 <div className="row align-items-center mb-4">
@@ -195,11 +192,11 @@ export default function UserManagementView() {
                     editValues={editValues}
                     setEditValues={setEditValues}
                     handleEdit={handleEdit}
+
                     handleSaveEdit={handleSaveEdit}
                     cancelEdit={cancelEdit}
 
                 />
-                <Footer />
             </div>
         </div>
     );
