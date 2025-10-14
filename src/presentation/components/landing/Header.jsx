@@ -44,6 +44,11 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item">
+              <Link className="nav-link" to="/dashboard/informacion-agricola">
+                Gestión Agrícola
+              </Link>
+            </li>
+            <li className="nav-item">
               <Link className="nav-link" to="/dashboard/stats">Estadísticas</Link>
             </li>
           </>
