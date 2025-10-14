@@ -5,19 +5,20 @@ import { GetAllNews } from "../../../domain/useCases/newsUseCases/GetAllNews";
 export default function PublishedNews() {
 
   const [noticias, setNoticias] = useState([]);
-
-  useEffect(() => {
+  const fetchNoticias = async () => {
     try {
-    const fetchNoticias = async () => {
+
       const newsRepo = new NewsRepositoryImpl();
       const getAllNews = new GetAllNews(newsRepo);
       const news = await getAllNews.execute();
       setNoticias(news);
-    };
-  } catch (error) {
-    console.error("Error fetching news:", error);
-    setNoticias([]);
-  }
+    } catch (error) {
+      console.error("Error fetching news:", error);
+      setNoticias([]);
+    }
+  };
+  useEffect(() => {
+
 
     fetchNoticias();
   }, []);

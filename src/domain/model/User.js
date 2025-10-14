@@ -1,8 +1,9 @@
 // src/domain/entities/User.js
 
 export class User {
-  constructor({ id = null, username, email, phoneNumber, municipality, soilTypes,status, role }) {
-    this.id = id;
+  constructor({ id = null, uid, username, email, phoneNumber, municipality, soilTypes,status, role }) {
+    this.id = id; // This will be the email
+    this.uid = uid; // This will be the firebase auth uid
     this.username = username;
     this.email = email;
     this.phoneNumber = phoneNumber;
@@ -16,6 +17,7 @@ export class User {
   toPlainObject() {
     return {
       id: this.id,
+      uid: this.uid,
       username: this.username,
       email: this.email,
       phoneNumber: this.phoneNumber,

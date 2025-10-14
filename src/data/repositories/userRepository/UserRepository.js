@@ -1,30 +1,53 @@
 import { db } from "../../database/Firebase";
-import { addDoc, collection, getDocs, updateDoc, doc } from "firebase/firestore";
+import { collection, getDocs, updateDoc, doc, getDoc, setDoc, query, where } from "firebase/firestore";
 import { User } from "../../../domain/model/User";
 
 export class UserRepository {
-    // constructor() {
-    //     this.userCollection = collection(db, "users");
-    // }
-    //funcion para agregar usuario, "por ahora no se usa"
+    constructor() {
+        this.userCollection = collection(db, "userDetails");
+    }
+
     async addUser(user) {
         const userData = user.toPlainObject();
-        await addDoc(this.userCollection, userData);
+        const userRef = doc(db, "userDetails", user.id);
+        delete userData.id;
+        await setDoc(userRef, userData);
     }
-    //funcion para obtener usuarios,"por ahora no se usa"
-    // async getUsers() {
-    //     const userSnapshot = await getDocs(this.userCollection);
-    //     return userSnapshot.docs.map(doc => new User(doc.id, ...Object.values(doc.data())));
-    // }
 
-    //funcion que obtiene todos los usuarios
+    async getUserByDocId(docId) {
+        const userRef = doc(db, "userDetails", docId);
+        const userSnap = await getDoc(userRef);
+        if (userSnap.exists()) {
+            return new User({ id: userSnap.id, ...userSnap.data() });
+        } else {
+            return null;
+        }
+    }
+
+    async getUserByEmail(email) {
+        const q = query(this.userCollection, where("email", "==", email));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+            const userDoc = querySnapshot.docs[0];
+            return new User({ id: userDoc.id, ...userDoc.data() });
+        }
+        return null;
+    }
+
+    async getUserByUid(uid) {
+        const q = query(this.userCollection, where("uid", "==", uid));
+        const querySnapshot = await getDocs(q);
+        if (!querySnapshot.empty) {
+            const userDoc = querySnapshot.docs[0];
+            return new User({ id: userDoc.id, ...userDoc.data() });
+        }
+        return null;
+    }
+
     async getAll() {
-        const userSnapshot = await getDocs(collection(db, "userDetails"));
+        const userSnapshot = await getDocs(this.userCollection);
         const users = [];
-
         userSnapshot.forEach((doc) => {
-
-            const data = doc.data();
             users.push(
                 new User({
                     id: doc.id,
@@ -33,17 +56,15 @@ export class UserRepository {
             );
         });
         return users;
-
     }
 
-
-    //funcion para actualizar un campo especifico de un usuario
     async updateUserField(userId, field, value) {
         const userRef = doc(db, "userDetails", userId);
         await updateDoc(userRef, {
-            [field]: value, // usa [field] para actualizar dinámicamente
+            [field]: value,
         });
     }
+
     async updateUser(id, data) {
         const userRef = doc(db, "userDetails", id);
         await updateDoc(userRef, data);
