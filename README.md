@@ -10,3 +10,41 @@ Currently, two official plugins are available:
 ## Expanding the ESLint configuration
 
 If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+
+
+##  Tecnologías
+- React
+- Vite
+- Firebase (Firestore)
+- Bootstrap 5
+-
+## dependencias
+- npm install xlsx file-server
+- npm install firebase
+- npm install boostrap
+
+## Funcionalidades
+- Crear noticias (con imagen embebida en base64).
+- Listar noticias publicadas.
+- Guardar como borrador.
+- Eliminar noticias.
+
+- mostrar los usuarios registrados
+- filtrar los usuarios por estado
+- editar los usuario
+- boton de suspender usuario
+- boton de reactivar usuario
+- funcion de ordenar los usuario
+- barra de busqueda
+
+
+## Arquitectura del proyecto 
+- clean arquitecture
+- Arquitectrura por componentes de react
+
+
+##  Cómo correr el proyecto
+```bash
+npm install
+npm run dev
+

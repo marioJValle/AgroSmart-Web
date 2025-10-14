@@ -1,5 +1,6 @@
-import { FormularioPublicacionNovedades } from "../components/FormularioPublicacionNovedades";
-import PublishedNews from "../components/PublishedNews";
+import { FormularioPublicacionNovedades } from "../components/novedades/FormularioPublicacionNovedades";
+import PublishedNews from "../components/novedades/PublishedNews";
+
 
 export default function ViewNews() {
   return (
@@ -21,10 +22,7 @@ export default function ViewNews() {
         {/* Columna izquierda - Formulario */}
         <div className="col-md-4">
           <div className="card shadow-sm">
-            <div className="card-body">
-              <h5 className="card-title mb-3">Nueva noticia</h5>
-              <FormularioPublicacionNovedades />
-            </div>
+            <FormularioPublicacionNovedades />
           </div>
         </div>
 
@@ -32,6 +30,7 @@ export default function ViewNews() {
         <div className="col-md-8">
           <div className="card shadow-sm">
             <PublishedNews />
+          
           </div>
         </div>
       </div>
