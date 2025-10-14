@@ -76,9 +76,9 @@ export default function UserManagementTable({
                                             {editingUserId === user.id ? (
                                                 <select
                                                     className="form-select"
-                                                    value={editValues.rol || ""}
+                                                    value={editValues.role || ""}
                                                     onChange={(e) =>
-                                                        setEditValues({ ...editValues, rol: e.target.value })
+                                                        setEditValues({ ...editValues, role: e.target.value })
                                                     }
                                                 >
                                                     <option value="Administrador">Administrador</option>
@@ -86,7 +86,7 @@ export default function UserManagementTable({
                                                     <option value="Institucion">Institucion</option>
                                                 </select>
                                             ) : (
-                                                user.rol
+                                                user.role
                                             )}
                                         </td>
                                         <td>

@@ -1,5 +1,5 @@
 import { FormularioPublicacionNovedades } from "../components/novedades/FormularioPublicacionNovedades";
-import PublishedNews from "../components/PublishedNews";
+import PublishedNews from "../components/novedades/PublishedNews";
 
 
 export default function ViewNews() {

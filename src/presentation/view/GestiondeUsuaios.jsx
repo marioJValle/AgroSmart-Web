@@ -3,9 +3,10 @@ import SearchBar from "../components/usuarios/SearchBar";
 import UserStatesCards from "../components/usuarios/UserStatesCard";
 import ActionButtons from "../components/usuarios/ActionButtons";
 import UserManagementTable from "../components/usuarios/UserManagementTable";
-import Footer from "../components/usuarios/Footer";
+import Footer from "../components/landing/Footer";
 import { UserRepository } from "../../data/repositories/userRepository/UserRepository";
 import { GetAllUsers } from "../../domain/useCases/userUseCases/GetAllUsers";
+import Header from "../components/landing/Header";
 
 
 
@@ -105,7 +106,7 @@ export default function UserManagementView() {
             return (
                 (u.username || "").toLowerCase().includes(searchTerm) ||
                 (u.email || "").toLowerCase().includes(searchTerm) ||
-                (u.rol || "").toLowerCase().includes(searchTerm) ||
+                (u.role || "").toLowerCase().includes(searchTerm) ||
                 (u.status || "").toLowerCase().includes(searchTerm)
             );
         });
@@ -163,40 +164,43 @@ export default function UserManagementView() {
     };
 
     return (
-        <div className="container mt-4">
-            <h3 className="mb-4">Gestión de usuario</h3>
-            <div className="row align-items-center mb-4">
-                <div className="col-md-6 w-50">
-                    <SearchBar onSearch={setSearch}
-                        setFilter={setFilter}
-                        filter={filter}
-                    />
+        <div>
+            <Header />
+            <div className="container mt-4">
+                <h3 className="mb-4">Gestión de usuario</h3>
+                <div className="row align-items-center mb-4">
+                    <div className="col-md-6 w-50">
+                        <SearchBar onSearch={setSearch}
+                            setFilter={setFilter}
+                            filter={filter}
+                        />
+                    </div>
+                    <div className="col-md-6 d-flex justify-content-end">
+                        <ActionButtons onSuspend={handleSuspend}
+                            usersToExport={users}
+                            sortBy={sortBy}
+                            setSortBy={setSortBy}
+                            sortOrder={sortOrder}
+                            setSortOrder={setSortOrder}
+                        />
+                    </div>
                 </div>
-                <div className="col-md-6 d-flex justify-content-end">
-                    <ActionButtons onSuspend={handleSuspend}
-                        usersToExport={users}
-                        sortBy={sortBy}
-                        setSortBy={setSortBy}
-                        sortOrder={sortOrder}
-                        setSortOrder={setSortOrder}
-                    />
-                </div>
-            </div>
-            <UserStatesCards stats={stats} />
-            <UserManagementTable
-                users={filteredUsers}
-                selectedUserId={selectedUserId}
-                onSelectUser={setSelectedUserId}
-                onReactivate={handleReactivate}
-                editingUserId={editingUserId}
-                editValues={editValues}
-                setEditValues={setEditValues}
-                handleEdit={handleEdit}
-                handleSaveEdit={handleSaveEdit}
-                cancelEdit={cancelEdit}
+                <UserStatesCards stats={stats} />
+                <UserManagementTable
+                    users={filteredUsers}
+                    selectedUserId={selectedUserId}
+                    onSelectUser={setSelectedUserId}
+                    onReactivate={handleReactivate}
+                    editingUserId={editingUserId}
+                    editValues={editValues}
+                    setEditValues={setEditValues}
+                    handleEdit={handleEdit}
+                    handleSaveEdit={handleSaveEdit}
+                    cancelEdit={cancelEdit}
 
-            />
-            <Footer />
+                />
+                <Footer />
+            </div>
         </div>
     );
 }
