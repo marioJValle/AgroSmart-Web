@@ -2,12 +2,13 @@ import { Routes, Route } from "react-router-dom";
 import LandingPage from "./view/LandingPage";
 import ViewNews from "./view/ViewNews";
 import GestiondeUsuairo from "./view/GestiondeUsuaios";
-import MainLayout from "./components/MainLayout";
+import MainLayout from "./context/MainLayout";
 import Login from "./view/Login";
 import ProtectedRoute from "./context/ProtectedRoute";
 import Unauthorized from "./view/Unauthorized";
 import Layout from "./context/Layout";
 import Dashboard from "./view/Dashboard";
+import Estadisticas from "./view/Estadisticas";
 
 export default function App() {
     return (
@@ -23,6 +24,7 @@ export default function App() {
                     <Route path="" element={<Dashboard />} />
                     <Route path="news" element={<ViewNews />} />
                     <Route path="user-management" element={<GestiondeUsuairo />} />
+                    <Route path="stats" element={<Estadisticas />} />
                 </Route>
             </Route>
         </Routes>

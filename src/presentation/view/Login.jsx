@@ -3,7 +3,6 @@ import GoogleAuth from '../../domain/useCases/authUseCases/GoogleAuth';
 import google from '../../assets/Img/google.png';
 import facebook from '../../assets/Img/facebook.png';
 import { useNavigate } from 'react-router-dom';
-import './Login.css';
 import { useState } from 'react';
 import { useContext } from 'react';
 import { UserContext } from '../context/UserContext.jsx';
