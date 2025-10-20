@@ -6,7 +6,11 @@ const ModalFormulario = ({ show, handleClose, handleSubmit, formData, setFormDat
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({ ...prev, [name]: value }));
+    setFormData(prev => ({ 
+      ...prev, 
+      [name]: value 
+      // ✅ El ID se mantiene intacto si existe
+    }));
   };
 
   return (
@@ -17,6 +21,7 @@ const ModalFormulario = ({ show, handleClose, handleSubmit, formData, setFormDat
       <Modal.Body>
         <Form onSubmit={(e) => {
           e.preventDefault();
+          // console.log("📤 Enviando formulario con datos:", formData); // Debug
           handleSubmit();
         }}>
           {fields.map(field => (
@@ -31,6 +36,10 @@ const ModalFormulario = ({ show, handleClose, handleSubmit, formData, setFormDat
               />
             </Form.Group>
           ))}
+          {/* ✅ Campo oculto para debug del ID */}
+          {formData.id && (
+            <input type="hidden" value={formData.id} />
+          )}
           <div className="d-flex justify-content-end">
             <Button variant="secondary" onClick={handleClose} className="me-2">
               Cancelar
