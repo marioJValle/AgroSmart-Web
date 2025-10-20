@@ -18,14 +18,12 @@ export const UserProvider = ({ children }) => {
 
                 console.log(`UserContext: Attempting to fetch user by UID field: ${firebaseUser.uid}`);
                 let userDetails = await userRepository.getUserByUid(firebaseUser.uid);
-                console.log("UserContext: Fetched user by UID field:", userDetails);
 
                 if (!userDetails) {
                     console.log("UserContext: User not found by UID. Attempting to fetch by email...");
                     userDetails = await userRepository.getUserByEmail(firebaseUser.email);
                 }
 
-                console.log("UserContext: Setting user state with:", userDetails);
                 setUser(userDetails);
             } else {
                 console.log("UserContext: No Firebase user. Setting user state to null.");
