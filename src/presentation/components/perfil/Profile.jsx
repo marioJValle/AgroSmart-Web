@@ -13,6 +13,9 @@ const Profile = () => {
   const [loading, setLoading] = useState(true);
   const auth = getAuth();
   const fUser = auth.currentUser;
+  const avatarUrl = fUser ? fUser.photoURL : null;
+ 
+
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -56,7 +59,7 @@ const Profile = () => {
     <Container className="mt-5">
       <Row className="justify-content-center">
         <Col md={8} lg={6}>
-          <ProfileHeader user={user} />
+          <ProfileHeader user={user} avatarSrc={avatarUrl} />
           <UserInfo user={user} />
         </Col>
       </Row>

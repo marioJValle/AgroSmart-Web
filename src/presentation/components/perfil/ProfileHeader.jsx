@@ -1,7 +1,7 @@
 import React from "react";
 import { Image, Card } from "react-bootstrap";
 
-const ProfileHeader = ({ user }) => {
+const ProfileHeader = ({ user, avatarSrc }) => {
   // Placeholder user data if not provided
   const currentUser = user || {
     name: " User Example",
@@ -13,7 +13,7 @@ const ProfileHeader = ({ user }) => {
     <Card className="text-center shadow-sm mb-4">
       <Card.Body>
         <Image
-          src={user.avatar}
+          src={avatarSrc || currentUser.avatar}
           roundedCircle
           width="150"
           height="150"
