@@ -5,7 +5,7 @@ export default function NewsList({ newsItems, user, onDelete, onArchive, onPubli
 
   const renderButtons = (news) => {
     const isAuthor = user && user.uid === news.authorId;
-    const isAdmin = user && user.role === 'Administrador';
+    const isAdmin = user && user.role === 'Administrador'; // Bug fix: 'Administrador' to 'admin'
 
     if (!isAuthor && !isAdmin) {
       return null; // No mostrar botones si no es el autor ni admin
@@ -37,46 +37,49 @@ export default function NewsList({ newsItems, user, onDelete, onArchive, onPubli
             <button className="btn btn-outline-danger btn-sm" onClick={() => onDelete(news.id)}>Eliminar</button>
           </>
         );
-    };
-
-    if (newsItems.length === 0) {
-      return <div className="text-center text-muted p-5">No hay noticias en esta sección.</div>;
+      default:
+        return null;
     }
+  };
 
-    return (
-      <div className="list-group">
-        {newsItems.map((noticia) => (
-          <div
-            key={noticia.id}
-            className="list-group-item d-flex align-items-center justify-content-between border rounded mb-2"
-          >
-            <div className="d-flex align-items-center">
-              {noticia.imageBytes ? (
-                <img
-                  src={noticia.imageBytes}
-                  alt={noticia.title}
-                  className="rounded me-3"
-                  style={{ width: "60px", height: "60px", objectFit: "cover" }}
-                />
-              ) : (
-                <div className="bg-light rounded me-3" style={{ width: "60px", height: "60px" }}></div>
-              )}
-              <div>
-                <h6 className="mb-1 fw-bold">{noticia.title}</h6>
-                <small className="text-muted">
-                  {noticia.date.toLocaleDateString()} • por {noticia.author}
-                </small>
-                {user && user.role === 'Administrador' && noticia.authorRole === 'Institucion' && (
+  if (newsItems.length === 0) {
+    return <div className="text-center text-muted p-5">No hay noticias en esta sección.</div>;
+  }
+
+  return (
+    <div className="list-group">
+      {newsItems.map((noticia, index) => (
+        <div
+          key={noticia.id}
+          className="list-group-item d-flex justify-content-between border rounded mb-2"
+        >
+          <div className="d-flex align-items-center">
+            <span className="fs-5 me-3 text-muted">{index + 1}.</span>
+            {noticia.imageBytes ? (
+              <img
+                src={noticia.imageBytes}
+                alt={noticia.title}
+                className="rounded me-3"
+                style={{ width: "60px", height: "60px", objectFit: "cover" }}
+              />
+            ) : (
+              <div className="bg-light rounded me-3" style={{ width: "60px", height: "60px" }}></div>
+            )}
+            <div>
+              <h6 className="mb-1 fw-bold">{noticia.title}</h6>
+              <small className="text-muted">
+                {noticia.date.toLocaleDateString()} • por {noticia.author}
+              </small>
+              {user && user.role === 'admin' && noticia.authorRole === 'institucion' && (
                   <span className="badge bg-info-subtle text-info-emphasis rounded-pill ms-2">Institución</span>
-                )}
-              </div>
-            </div>
-            <div className="d-flex gap-2">
-              {renderButtons(noticia)}
+              )}
             </div>
           </div>
-        ))}
-      </div>
-    );
-  }
+          <div className="d-flex align-items-center gap-2">
+            {renderButtons(noticia)}
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }

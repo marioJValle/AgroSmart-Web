@@ -22,14 +22,14 @@ export function FormularioPublicacionNovedades({ user, initialData, onSave, onCa
             setImageBase64(initialData.imageBytes || null);
         } else {
             // When not editing, set author based on role
-            const authorName = user && user.role === 'admin' ? 'Team AgroSmart' : '';
+            const authorName = user && user.role === 'Administrador' ? 'Team AgroSmart' : '';
             setFormData({ title: "", description: "", author: authorName, content: "" });
             setPreview(null);
             setImageBase64(null);
         }
 
         // Lock author field only for admin users
-        setIsAuthorLocked(user && user.role === 'admin');
+        setIsAuthorLocked(user && user.role === 'Administrador');
 
     }, [initialData, user]);
 
@@ -62,7 +62,7 @@ export function FormularioPublicacionNovedades({ user, initialData, onSave, onCa
     };
 
     const clearForm = () => {
-        const authorName = user && user.role === 'admin' ? 'Team AgroSmart' : '';
+        const authorName = user && user.role === 'Administrador' ? 'Team AgroSmart' : '';
         setFormData({ title: "", description: "", author: authorName, content: "" });
         setPreview(null);
         setImageBase64(null);
