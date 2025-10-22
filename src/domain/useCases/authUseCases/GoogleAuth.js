@@ -19,7 +19,7 @@ const GoogleAuth = async () => {
     if (!existingUser) {
       console.log("GoogleAuth: No existing user found. Creating new user...");
       await CreateUser({
-        id: user.uid,        // ✅ Usa UID, no email
+        id: user.email,        // ✅ Usa UID, no email
         uid: user.uid,
         username: user.displayName,
         email: user.email,

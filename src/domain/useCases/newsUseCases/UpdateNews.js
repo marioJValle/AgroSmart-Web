@@ -1,8 +1,8 @@
 import { NewsRepository } from '../../../data/repositories/NewsRepository/NewsRepository';
 
-const CreateNews = async (news) => {
+const UpdateNews = async (newsId, data) => {
     const newsRepository = new NewsRepository();
-    return await newsRepository.createNews(news);
+    return await newsRepository.updateNews(newsId, data);
 };
 
-export default CreateNews;
+export default UpdateNews;

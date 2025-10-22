@@ -27,7 +27,7 @@ export class NewsRepository {
     } else {
       // Las instituciones ven lo publicado por admins y todo lo suyo
       const adminPublishedQuery = query(this.collectionRef, 
-        where("authorRole", "==", "Administrador"), 
+        where("authorRole", "==", "admin"), 
         where("status", "==", "published")
       );
       const ownContentQuery = query(this.collectionRef, 
