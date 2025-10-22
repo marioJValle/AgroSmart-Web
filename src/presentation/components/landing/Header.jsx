@@ -18,10 +18,14 @@ const Header = () => {
       return (
         <>
           <li className="nav-item">
-            <Link className="nav-link" to="/">Inicio</Link>
+            <Link className="nav-link" to="/">
+              Inicio
+            </Link>
           </li>
           <li className="nav-item">
-            <Link className="nav-link" to="/login">Login</Link>
+            <Link className="nav-link" to="/login">
+              Login
+            </Link>
           </li>
         </>
       );
@@ -33,10 +37,14 @@ const Header = () => {
         return (
           <>
             <li className="nav-item">
-              <Link className="nav-link" to="/">Inicio</Link>
+              <Link className="nav-link" to="/">
+                Inicio
+              </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/dashboard/news">Noticias</Link>
+              <Link className="nav-link" to="/dashboard/news">
+                Noticias
+              </Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/dashboard/user-management">
@@ -49,7 +57,14 @@ const Header = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/dashboard/estadisticas">Estadísticas</Link>
+              <Link className="nav-link" to="/dashboard/estadisticas">
+                Estadísticas
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/dashboard/profile">
+                Perfil
+              </Link>
             </li>
           </>
         );
@@ -58,10 +73,19 @@ const Header = () => {
         return (
           <>
             <li className="nav-item">
-              <Link className="nav-link" to="/">Inicio</Link>
+              <Link className="nav-link" to="/">
+                Inicio
+              </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/dashboard/news">Noticias</Link>
+              <Link className="nav-link" to="/dashboard/news">
+                Noticias
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to="/dashboard/profile">
+                Perfil
+              </Link>
             </li>
           </>
         );
@@ -70,13 +94,19 @@ const Header = () => {
         return (
           <>
             <li className="nav-item">
-              <Link className="nav-link" to="/">Inicio</Link>
+              <Link className="nav-link" to="/">
+                Inicio
+              </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/profile">Perfil</Link>
+              <Link className="nav-link" to="/mis-cultivos">
+                Mis Cultivos
+              </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="/mis-cultivos">Mis Cultivos</Link>
+              <Link className="nav-link" to="/dashboard/profile">
+                Perfil
+              </Link>
             </li>
           </>
         );
@@ -84,14 +114,19 @@ const Header = () => {
       default:
         return (
           <li className="nav-item">
-            <Link className="nav-link" to="/">Inicio</Link>
+            <Link className="nav-link" to="/">
+              Inicio
+            </Link>
           </li>
         );
     }
   };
 
   return (
-    <header className="navbar navbar-expand-lg navbar-light" style={{ backgroundColor: '#E2FF36' }}>
+    <header
+      className="navbar navbar-expand-lg navbar-light"
+      style={{ backgroundColor: "#E2FF36" }}
+    >
       <div className="container">
         <a className="navbar-brand" href="#">
           <img src={logo} alt="AgroSmart Logo" style={{ height: "40px" }} />
@@ -114,7 +149,10 @@ const Header = () => {
             {renderNavLinks()}
             {user && (
               <li className="nav-item ms-3">
-                <button className="btn btn-outline-danger btn-sm" onClick={handleLogout}>
+                <button
+                  className="btn btn-outline-danger btn-sm"
+                  onClick={handleLogout}
+                >
                   Logout
                 </button>
               </li>

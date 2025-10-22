@@ -27,7 +27,7 @@ const GoogleAuth = async () => {
         municipality: '',
         soilTypes: '',
         status: 'activo',
-        role: 'agricultor'
+        role: 'Agricultor'
       });
     } else {
       console.log("GoogleAuth: User already exists. Skipping creation.");
