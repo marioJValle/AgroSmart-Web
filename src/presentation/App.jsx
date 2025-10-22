@@ -10,6 +10,7 @@ import Layout from "./context/Layout";
 import Dashboard from "./view/Dashboard";
 import GestionInformacion from "./view/GestionInformacion";
 import EstadisticasPage from "./view/EstadisticasPage";
+import ProfilePage from "./view/ProfilePage";
 
 export default function App() {
     return (
@@ -27,6 +28,7 @@ export default function App() {
                     <Route path="user-management" element={<GestiondeUsuairo />} />
                     <Route path="informacion-agricola" element={<GestionInformacion />} />
                     <Route path="estadisticas" element={<EstadisticasPage />} />
+                    <Route path="profile" element={<ProfilePage />} />
                 </Route>
             </Route>
         </Routes>
