@@ -5,6 +5,7 @@ import ActionButtons from "../components/usuarios/ActionButtons";
 import UserManagementTable from "../components/usuarios/UserManagementTable";
 import { UserRepository } from "../../data/repositories/userRepository/UserRepository";
 import { GetAllUsers } from "../../domain/useCases/userUseCases/GetAllUsers";
+import { getAuth } from "firebase/auth";
 
 
 
@@ -23,6 +24,9 @@ export default function UserManagementView() {
         new: 0,
         suspended: 0,
     });
+    const auth = getAuth(); //
+    const fauth = auth.currentUser;
+    const avatarimg = fauth ? fauth.photoURL : "";// Obtener la foto de perfil del usuario autenticado, en prueba.
 
 
     //funcion para supender un usuario
@@ -192,7 +196,7 @@ export default function UserManagementView() {
                     editValues={editValues}
                     setEditValues={setEditValues}
                     handleEdit={handleEdit}
-
+                    avatarSrc={avatarimg}
                     handleSaveEdit={handleSaveEdit}
                     cancelEdit={cancelEdit}
 

@@ -10,7 +10,7 @@ export default function UserManagementTable({
     setEditValues,
     handleEdit,
     handleSaveEdit,
-    cancelEdit, }) {
+    cancelEdit,avatarSrc }) {
 
 
 
@@ -39,7 +39,7 @@ export default function UserManagementTable({
                                     >
                                         <td>
                                             <img
-                                                src={user.avatar || "https://ui-avatars.com/api/?name=Usuario&background=random"}
+                                                src={avatarSrc || "https://ui-avatars.com/api/?name=Usuario&background=random"}
                                                 alt="avatar"
                                                 className="rounded-circle me-2"
                                                 width="40"

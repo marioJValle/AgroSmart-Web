@@ -11,6 +11,7 @@ import Dashboard from "./view/Dashboard";
 import GestionInformacion from "./view/GestionInformacion";
 import EstadisticasPage from "./view/EstadisticasPage";
 import ProfilePage from "./view/ProfilePage";
+import PhotografyData from "./view/PhotografyData";
 
 export default function App() {
     return (
@@ -29,6 +30,7 @@ export default function App() {
                     <Route path="informacion-agricola" element={<GestionInformacion />} />
                     <Route path="estadisticas" element={<EstadisticasPage />} />
                     <Route path="profile" element={<ProfilePage />} />
+                    <Route path="photografy-data" element={<PhotografyData />} />
                 </Route>
             </Route>
         </Routes>
