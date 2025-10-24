@@ -1,7 +1,6 @@
-import React, { useState, useEffect, useContext } from 'react';
+import { UserContext } from '../context/UserContext';
 import { FormularioPublicacionNovedades } from "../components/novedades/FormularioPublicacionNovedades";
 import NewsList from "../components/novedades/NewsList";
-import { UserContext } from '../context/UserContext';
 import { News } from '../../domain/model/News';
 import { Spinner, Alert } from 'react-bootstrap';
 import AlertaNotificacion from '../components/gestionInformacion/AlertaNotificacion';
@@ -10,6 +9,7 @@ import GetNews from '../../domain/useCases/newsUseCases/GetNews';
 import CreateNews from '../../domain/useCases/newsUseCases/CreateNews';
 import UpdateNews from '../../domain/useCases/newsUseCases/UpdateNews';
 import DeleteNews from '../../domain/useCases/newsUseCases/DeleteNews';
+import { useContext, useEffect, useState } from 'react';
 
 export default function ViewNews() {
   const { user, loading: userLoading } = useContext(UserContext);

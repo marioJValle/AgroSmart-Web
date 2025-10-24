@@ -8,8 +8,10 @@ const StatCard = ({ title, value, description, className }) => {
         <Card.Title as="h3">{value}</Card.Title>
         <Card.Text className="text-muted">{title}</Card.Text>
         {description && <small className="text-muted">{description}</small>}
+        
       </Card.Body>
     </Card>
+    
   );
 };
 

@@ -1,12 +1,13 @@
 
-// IMPORTANT: This repository returns mock data because the actual Firebase collections do not exist yet.
-// When the backend is ready, replace the mock data generation with actual Firestore queries.
 
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../../database/Firebase";
 import { MMLStats } from "../../../domain/model/MMLStats";
 import { AgriculturalStats } from "../../../domain/model/AgriculturalStats";
+import { UserRepository } from "../userRepository/UserRepository";
 
-// --- Mock Data Source ---
-// This simulates a more realistic, granular collection in Firebase.
+// --- DATOS FICTICIOS PARA ESTADÍSTICAS AGRÍCOLAS ---
+// TODO: Reemplazar estos datos con llamadas a Firebase
 const mockProductionRecords = [
   // 2024-Q1
   { season: '2024-Q1', municipality: 'Juigalpa', crop: 'Maíz', hectares: 500, farmerId: 'f001' },
@@ -40,58 +41,40 @@ const mockProductionRecords = [
   { season: '2024-Q4', municipality: 'San Pedro de Lóvago', crop: 'Maíz', hectares: 650, farmerId: 'f005' },
   { season: '2024-Q4', municipality: 'Santo Domingo', crop: 'Maíz', hectares: 300, farmerId: 'f009' },
 ];
-
-const mockMMLStatsData = {
-  averageResponseTime: 450, // ms
-  accuracy: 92.5,
-  successRate: 95.0,
-  failureRate: 5.0,
-  averageConfidence: 88.7,
-  ramUsage: { current: 768, max: 2048, unit: 'MB' },
-  intents: {
-    'identificar_plaga': 1200,
-    'recomendar_fertilizante': 950,
-    'predecir_clima': 600,
-    'optimizar_riego': 450,
-    'saludo': 2000,
-  },
-  hourlyUsage: [
-    5, 3, 2, 4, 10, 20, 35, 50, 75, 90, 110, 120, 115, 130, 125, 100, 85, 70, 65, 55, 40, 30, 20, 10
-  ],
-  dailyUsage: {
-    'Lunes': 1500,
-    'Martes': 1800,
-    'Miércoles': 2200,
-    'Jueves': 1900,
-    'Viernes': 2500,
-    'Sábado': 1200,
-    'Domingo': 800,
-  },
-};
+// --- FIN DE DATOS FICTICIOS ---
 
 export class StatisticsRepository {
   constructor() {
-    this.mmlStatsCollectionName = "mml_stats";
+    this.userRepository = new UserRepository();
+    this.mmlStatsCollectionName = "MMLStats";
     this.agriculturalRecordsCollectionName = "agricultural_records";
   }
 
   async getMMLStats() {
-    return new Promise(resolve => {
-      setTimeout(() => {
-        resolve(new MMLStats({ id: 'mock_mml_stats_id', ...mockMMLStatsData }));
-      }, 500);
+    const mmlStatsCollection = collection(db, this.mmlStatsCollectionName);
+    const mmlStatsSnapshot = await getDocs(mmlStatsCollection);
+    const mmlStats = [];
+    mmlStatsSnapshot.forEach((doc) => {
+        mmlStats.push({
+            id: doc.id,
+            ...doc.data(),
+        });
     });
+    return mmlStats;
   }
 
+  // TODO: Este método actualmente usa datos ficticios (mockProductionRecords).
+  // Se debe modificar para obtener los datos de Firebase de la colección this.agriculturalRecordsCollectionName.
   async getAgriculturalStats() {
+    const users = await this.userRepository.getAll();
     // --- Aggregation Logic ---
-    // This simulates what you would do on a backend or with complex client-side logic
-    // to transform raw Firestore data into the stats needed by the UI.
     const aggregated = {
         seasonalCultivation: {},
         sowingByMunicipality: {},
         topCrops: {},
-        municipalBreakdown: { 'Maíz': {}, 'Frijol': {}, 'Sorgo': {} }
+        municipalBreakdown: { 'Maíz': {}, 'Frijol': {}, 'Sorgo': {} },
+        usersByMunicipality: {},
+        soilTypesDistribution: {},
     };
 
     mockProductionRecords.forEach(rec => {
@@ -116,6 +99,29 @@ export class StatisticsRepository {
         aggregated.municipalBreakdown[rec.crop][rec.municipality].farmers.add(rec.farmerId);
     });
 
+    // Process user data
+    users.forEach(user => {
+        // Users by Municipality
+        if (user.municipality) {
+            aggregated.usersByMunicipality[user.municipality] = (aggregated.usersByMunicipality[user.municipality] || 0) + 1;
+        }
+        // Soil Types Distribution
+        if (user.soilTypes) {
+            let soilTypesArray = [];
+            if (typeof user.soilTypes === 'string') {
+                soilTypesArray = user.soilTypes.split(',').map(s => s.trim());
+            } else if (Array.isArray(user.soilTypes)) {
+                soilTypesArray = user.soilTypes;
+            }
+
+            soilTypesArray.forEach(soilType => {
+                if (soilType) { // Ensure not to count empty strings
+                    aggregated.soilTypesDistribution[soilType] = (aggregated.soilTypesDistribution[soilType] || 0) + 1;
+                }
+            });
+        }
+    });
+
     // Final formatting
     const finalStats = {
         seasonalCultivation: aggregated.seasonalCultivation,
@@ -130,7 +136,9 @@ export class StatisticsRepository {
                     farmerCount: data.farmers.size
                 })).sort((a, b) => b.hectares - a.hectares)
             ])
-        )
+        ),
+        usersByMunicipality: Object.entries(aggregated.usersByMunicipality).map(([municipality, count]) => ({ name: municipality, count })),
+        soilTypesDistribution: Object.entries(aggregated.soilTypesDistribution).map(([soilType, count]) => ({ name: soilType, count })),
     };
 
     return new Promise(resolve => {
