@@ -13,7 +13,7 @@ export const UserProvider = ({ children }) => {
         const unsubscribe = auth.onAuthStateChanged(async (firebaseUser) => {
             console.log("UserContext: onAuthStateChanged event fired.");
             if (firebaseUser) {
-                console.log("UserContext: Firebase user is present:", firebaseUser);
+                // console.log("UserContext: Firebase user is present:", firebaseUser);
                 const userRepository = new UserRepository();
 
                 console.log(`UserContext: Attempting to fetch user by UID field: ${firebaseUser.uid}`);

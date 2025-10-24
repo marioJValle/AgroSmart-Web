@@ -4,7 +4,7 @@ import { UserContext } from './UserContext';
 
 const ProtectedRoute = () => {
     const { user, loading } = useContext(UserContext);
-    console.log("ProtectedRoute: Checking auth status...", { user, loading });
+    // console.log("ProtectedRoute: Checking auth status...", { user, loading });
 
     if (loading) {
         console.log("ProtectedRoute: Status is LOADING.");
