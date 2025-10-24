@@ -1,20 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import { Row, Col, Spinner, Alert, Tabs, Tab, Table, Card } from 'react-bootstrap';
+import React, { useState, useEffect, useRef, createRef } from 'react';
+import { Row, Col, Spinner, Alert, Tabs, Tab, Table, Card, Form, Button } from 'react-bootstrap';
 import GetAgriculturalStats from '../../../domain/useCases/statisticsUseCases/GetAgriculturalStats';
 import StatCard from './StatCard';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, LabelList } from 'recharts';
+import BotonExportarSeccion from './BotonExportarSeccion'; // Importar el componente de sección
 
 const AgriculturalStats = () => {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
+    // --- LÓGICA DE SELECCIÓN Y REFERENCIAS ---
+    const chartKeys = [
+        'topCrops', 'municipalityHectares', 'usersByMunicipality', 'soilTypes',
+        'seasonalCultivationTable' // La tabla de cultivos por temporada
+    ];
+    const chartNames = {
+        topCrops: 'Top Cultivos (por Hectáreas)',
+        municipalityHectares: 'Hectáreas Totales por Municipio',
+        usersByMunicipality: 'Usuarios por Municipio',
+        soilTypes: 'Distribución de Tipos de Suelo',
+        seasonalCultivationTable: 'Cultivos por Temporada (Hectáreas)'
+    };
+
+    const chartRefs = useRef(chartKeys.reduce((acc, key) => ({ ...acc, [key]: createRef() }), {})).current;
+    const [selectedCharts, setSelectedCharts] = useState(chartKeys.reduce((acc, key) => ({ ...acc, [key]: false }), {}));
+
+    const handleSelectAll = (e) => {
+        const isChecked = e.target.checked;
+        setSelectedCharts(chartKeys.reduce((acc, key) => ({ ...acc, [key]: isChecked }), {}));
+    };
+
+    const handleChartSelect = (key, isChecked) => {
+        setSelectedCharts(prev => ({ ...prev, [key]: isChecked }));
+    };
+
     useEffect(() => {
         const fetchStats = async () => {
             try {
                 setLoading(true);
                 const result = await GetAgriculturalStats();
-                console.log("AgriculturalStats: Resultado de GetAgriculturalStats:", result);
                 setStats(result);
             } catch (e) {
                 setError('Failed to load agricultural statistics.');
@@ -27,8 +52,8 @@ const AgriculturalStats = () => {
         fetchStats();
     }, []);
 
+    // --- FUNCIÓN RESTAURADA PARA RENDERIZAR PESTAÑAS DE CULTIVOS ---
     const renderCropDetailTab = (cropName) => {
-        // Helper function to render the details for a specific crop
         if (!stats || !stats.seasonalCultivation) return null;
 
         const seasonalData = Object.entries(stats.seasonalCultivation).map(([season, crops]) => ({
@@ -52,7 +77,6 @@ const AgriculturalStats = () => {
             }
         }
     
-
         return (
             <>
                 <Row>
@@ -114,36 +138,76 @@ const AgriculturalStats = () => {
         );
     };
 
+    if (loading) {
+        return <div className="text-center"><Spinner animation="border" /></div>;
+    }
 
-        if (loading) {
-            return <div className="text-center"><Spinner animation="border" /></div>;
-        }
+    if (error) {
+        return <Alert variant="danger">{error}</Alert>;
+    }
 
-        if (error) {
-            return <Alert variant="danger">{error}</Alert>;
-        }
+    if (!stats) {
+        return <Alert variant="warning">No agricultural data available.</Alert>;
+    }
 
-        if (!stats) {
-            return <Alert variant="warning">No agricultural data available.</Alert>;
-        }
+    const topCropsData = stats.topCrops?.map(item => ({ name: item.crop, Hectáreas: item.amount })) || [];
+    const municipalityData = stats.sowingByMunicipality ? Object.entries(stats.sowingByMunicipality).map(([label, data]) => ({ name: label, Hectáreas: data.hectares })) : [];
+    const usersByMunicipalityData = stats.usersByMunicipality || [];
+    const soilTypesDistributionData = stats.soilTypesDistribution || [];
+    const seasonalCultivationTableData = stats.seasonalCultivation ? Object.entries(stats.seasonalCultivation).map(([season, crops]) => ({
+        Temporada: season,
+        ...crops
+    })) : [];
 
-        // Prepare data for general charts
-        const topCropsData = stats.topCrops?.map(item => ({ name: item.crop, Hectáreas: item.amount })) || [];
-        const municipalityData = stats.sowingByMunicipality
-            ? Object.entries(stats.sowingByMunicipality).map(([label, data]) => ({ name: label, Hectáreas: data.hectares }))
-            : [];
+    const allChartData = {
+        topCrops: topCropsData,
+        municipalityHectares: municipalityData,
+        usersByMunicipality: usersByMunicipalityData,
+        soilTypes: soilTypesDistributionData,
+        seasonalCultivationTable: seasonalCultivationTableData,
+    };
 
-        const usersByMunicipalityData = stats.usersByMunicipality || [];
-        const soilTypesDistributionData = stats.soilTypesDistribution || [];
+    const numSelected = Object.values(selectedCharts).filter(Boolean).length;
+    const allSelected = numSelected === chartKeys.length;
 
-        return (
-            <Tabs defaultActiveKey="general" id="agri-stats-main-tabs" className="mb-3">
-                <Tab eventKey="general" title="Visión General">
-                    <Row>
-                        <Col md={6} className="mb-4">
-                            <Card>
+    return (
+        <Tabs defaultActiveKey="general" id="agri-stats-main-tabs" className="mb-3">
+            <Tab eventKey="general" title="Visión General">
+                
+                <Card className="mb-3">
+                    <Card.Body className='d-flex justify-content-between align-items-center'>
+                        <div>
+                            <Form.Check 
+                                type="checkbox"
+                                id="select-all-general"
+                                label={allSelected ? 'Deseleccionar Todos' : 'Seleccionar Todos'}
+                                checked={allSelected}
+                                onChange={handleSelectAll}
+                            />
+                        </div>
+                        <BotonExportarSeccion 
+                            selectedCharts={selectedCharts}
+                            chartRefs={chartRefs}
+                            chartData={allChartData}
+                            chartNames={chartNames}
+                        />
+                    </Card.Body>
+                </Card>
+
+                <Row>
+                    <Col md={6} className="mb-4">
+                        <Card>
+                            <div ref={chartRefs.topCrops}>
                                 <Card.Body>
-                                    <Card.Title>Top Cultivos (por Hectáreas)</Card.Title>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <Card.Title>{chartNames.topCrops}</Card.Title>
+                                        <Form.Check 
+                                            type="checkbox"
+                                            id="select-topCrops"
+                                            checked={selectedCharts.topCrops}
+                                            onChange={(e) => handleChartSelect('topCrops', e.target.checked)}
+                                        />
+                                    </div>
                                     <ResponsiveContainer width="100%" height={300}>
                                         <BarChart data={topCropsData}>
                                             <CartesianGrid strokeDasharray="3 3" />
@@ -156,12 +220,23 @@ const AgriculturalStats = () => {
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </Card.Body>
-                            </Card>
-                        </Col>
-                        <Col md={6} className="mb-4">
-                            <Card>
+                            </div>
+                        </Card>
+                    </Col>
+
+                    <Col md={6} className="mb-4">
+                        <Card>
+                            <div ref={chartRefs.municipalityHectares}>
                                 <Card.Body>
-                                    <Card.Title>Hectáreas Totales por Municipio</Card.Title>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <Card.Title>{chartNames.municipalityHectares}</Card.Title>
+                                        <Form.Check 
+                                            type="checkbox"
+                                            id="select-municipalityHectares"
+                                            checked={selectedCharts.municipalityHectares}
+                                            onChange={(e) => handleChartSelect('municipalityHectares', e.target.checked)}
+                                        />
+                                    </div>
                                     <ResponsiveContainer width="100%" height={300}>
                                         <BarChart data={municipalityData}>
                                             <CartesianGrid strokeDasharray="3 3" />
@@ -174,14 +249,25 @@ const AgriculturalStats = () => {
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </Card.Body>
-                            </Card>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col xl={6} className="mb-4">
-                            <Card>
+                            </div>
+                        </Card>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col xl={6} className="mb-4">
+                        <Card>
+                            <div ref={chartRefs.usersByMunicipality}>
                                 <Card.Body>
-                                    <Card.Title>Usuarios por Municipio</Card.Title>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <Card.Title>{chartNames.usersByMunicipality}</Card.Title>
+                                        <Form.Check 
+                                            type="checkbox"
+                                            id="select-usersByMunicipality"
+                                            checked={selectedCharts.usersByMunicipality}
+                                            onChange={(e) => handleChartSelect('usersByMunicipality', e.target.checked)}
+                                        />
+                                    </div>
                                     <ResponsiveContainer width="100%" height={300}>
                                         <BarChart data={usersByMunicipalityData}>
                                             <CartesianGrid strokeDasharray="3 3" />
@@ -193,14 +279,23 @@ const AgriculturalStats = () => {
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </Card.Body>
-                            </Card>
-                        </Col>
-                        <Col xl={6} className="mb-4">
-                            <Card>
+                            </div>
+                        </Card>
+                    </Col>
+                    <Col xl={6} className="mb-4">
+                        <Card>
+                            <div ref={chartRefs.soilTypes}>
                                 <Card.Body>
-                                    <Card.Title>Distribución de Tipos de Suelo</Card.Title>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <Card.Title>{chartNames.soilTypes}</Card.Title>
+                                        <Form.Check 
+                                            type="checkbox"
+                                            id="select-soilTypes"
+                                            checked={selectedCharts.soilTypes}
+                                            onChange={(e) => handleChartSelect('soilTypes', e.target.checked)}
+                                        />
+                                    </div>
                                     <ResponsiveContainer width="100%" height={300}>
-                                        {console.log("AgriculturalStats: soilTypesDistributionData:", soilTypesDistributionData)}
                                         <BarChart data={soilTypesDistributionData}>
                                             <CartesianGrid strokeDasharray="3 3" />
                                             <XAxis dataKey="name" />
@@ -211,14 +306,25 @@ const AgriculturalStats = () => {
                                         </BarChart>
                                     </ResponsiveContainer>
                                 </Card.Body>
-                            </Card>
-                        </Col>
-                    </Row>
-                    <Row>
-                        <Col>
-                            <Card>
+                            </div>
+                        </Card>
+                    </Col>
+                </Row>
+
+                <Row>
+                    <Col>
+                        <Card>
+                            <div ref={chartRefs.seasonalCultivationTable}>
                                 <Card.Body>
-                                    <Card.Title>Cultivos por Temporada (Hectáreas)</Card.Title>
+                                    <div className="d-flex justify-content-between align-items-center">
+                                        <Card.Title>{chartNames.seasonalCultivationTable}</Card.Title>
+                                        <Form.Check 
+                                            type="checkbox"
+                                            id="select-seasonalCultivationTable"
+                                            checked={selectedCharts.seasonalCultivationTable}
+                                            onChange={(e) => handleChartSelect('seasonalCultivationTable', e.target.checked)}
+                                        />
+                                    </div>
                                     <Table striped bordered hover responsive size="sm">
                                         <thead>
                                             <tr>
@@ -236,23 +342,22 @@ const AgriculturalStats = () => {
                                         </tbody>
                                     </Table>
                                 </Card.Body>
-                            </Card>
-                        </Col>
-                    </Row>
-                </Tab>
-                <Tab eventKey="maiz" title="Maíz">
-                    {renderCropDetailTab('Maíz')}
-                </Tab>
-                <Tab eventKey="frijol" title="Frijol">
-                    {renderCropDetailTab('Frijol')}
-                </Tab>
-                <Tab eventKey="sorgo" title="Sorgo">
-                    {renderCropDetailTab('Sorgo')}
-                </Tab>
-            </Tabs>
-        );
-    };
+                            </div>
+                        </Card>
+                    </Col>
+                </Row>
+            </Tab>
+            <Tab eventKey="maiz" title="Maíz">
+                {renderCropDetailTab('Maíz')}
+            </Tab>
+            <Tab eventKey="frijol" title="Frijol">
+                {renderCropDetailTab('Frijol')}
+            </Tab>
+            <Tab eventKey="sorgo" title="Sorgo">
+                {renderCropDetailTab('Sorgo')}
+            </Tab>
+        </Tabs>
+    );
+};
 
-
-
-    export default AgriculturalStats;
+export default AgriculturalStats;
