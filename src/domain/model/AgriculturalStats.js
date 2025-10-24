@@ -4,7 +4,9 @@ export class AgriculturalStats {
     seasonalCultivation, 
     sowingByMunicipality, 
     topCrops, 
-    cropDetails 
+    cropDetails, 
+    usersByMunicipality, 
+    soilTypesDistribution 
   }) {
     this.id = id;
     // Example: { '2024-Q1': { 'Maíz': 1500, 'Frijol': 900 }, '2024-Q2': { ... } }
@@ -18,6 +20,9 @@ export class AgriculturalStats {
 
     // Example: { 'Maíz': { hectares: 12000, producers: 350 }, 'Frijol': { ... } }
     this.cropDetails = cropDetails;
+
+    this.usersByMunicipality = usersByMunicipality;
+    this.soilTypesDistribution = soilTypesDistribution;
   }
 
   static fromFirebase(doc) {
@@ -28,6 +33,8 @@ export class AgriculturalStats {
       sowingByMunicipality: data.sowingByMunicipality,
       topCrops: data.topCrops,
       cropDetails: data.cropDetails,
+      usersByMunicipality: data.usersByMunicipality,
+      soilTypesDistribution: data.soilTypesDistribution,
     });
   }
 }

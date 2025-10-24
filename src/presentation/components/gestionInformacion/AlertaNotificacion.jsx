@@ -1,8 +1,9 @@
 
-import React, { useState, useEffect } from 'react';
+import  { useEffect } from 'react';
 import { Alert } from 'react-bootstrap';
 
 const AlertaNotificacion = ({ show, message, variant, onClose }) => {
+
   useEffect(() => {
     if (show) {
       const timer = setTimeout(() => {
