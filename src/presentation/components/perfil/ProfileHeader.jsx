@@ -1,4 +1,3 @@
-import React from "react";
 import { Image, Card } from "react-bootstrap";
 
 const ProfileHeader = ({ user, avatarSrc }) => {
