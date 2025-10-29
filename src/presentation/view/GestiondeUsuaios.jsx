@@ -26,7 +26,7 @@ export default function UserManagementView() {
     });
     const auth = getAuth(); //
     const fauth = auth.currentUser;
-    const avatarimg = fauth ? fauth.photoURL : "";// Obtener la foto de perfil del usuario autenticado, en prueba.
+    const avatarimg = fauth ? fauth.photoURL : null;// Obtener la foto de perfil del usuario autenticado, en prueba.
 
 
     //funcion para supender un usuario
