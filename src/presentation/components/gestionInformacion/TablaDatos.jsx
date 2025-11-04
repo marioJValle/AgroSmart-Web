@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { Table, Button } from 'react-bootstrap';
 
@@ -15,7 +16,18 @@ const TablaDatos = ({ data, columns, onEdit, onDelete }) => {
           data.map((item, index) => (
             <tr key={item.id ?? `${item.nombre ?? item.titulo ?? 'row'}-${index}`}>
               {columns.map(col => (
-                <td key={col.key ?? `${col.header}-${index}`}>{item[col.key]}</td>
+                <td key={col.key ?? `${col.header}-${index}`}>
+                  {/* Renderizar imagen si la clave de la columna es para una imagen */}
+                  {col.key.startsWith('image') ? (
+                    <img 
+                      src={item[col.key]} 
+                      alt="-" 
+                      style={{ width: '50px', height: '50px', borderRadius: '8px', objectFit: 'cover' }} 
+                    />
+                  ) : (
+                    item[col.key]
+                  )}
+                </td>
               ))}
               <td>
                 <Button
@@ -29,7 +41,7 @@ const TablaDatos = ({ data, columns, onEdit, onDelete }) => {
                 <Button
                   variant="danger"
                   size="sm"
-                  onClick={() => onDelete(item)} // ✅ Cambiado: pasar objeto completo
+                  onClick={() => onDelete(item)}
                 >
                   Eliminar
                 </Button>

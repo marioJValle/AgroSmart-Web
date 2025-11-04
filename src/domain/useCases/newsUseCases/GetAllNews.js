@@ -1,10 +1,10 @@
-
+import { NewsRepository } from '../../../data/repositories/NewsRepository/NewsRepository';
 export class GetAllNews {
-  constructor(newsRepository) {
-    this.newsRepository = newsRepository;
+  constructor(NewsRepository) {
+    this.newsRepository = new NewsRepository();
   }
 
-  async execute() {
+  async execute() { 
     return await this.newsRepository.getAll();
   }
 }

@@ -10,6 +10,7 @@ import CreateNews from '../../domain/useCases/newsUseCases/CreateNews';
 import UpdateNews from '../../domain/useCases/newsUseCases/UpdateNews';
 import DeleteNews from '../../domain/useCases/newsUseCases/DeleteNews';
 import { useContext, useEffect, useState } from 'react';
+import SearchBar from '../components/gestionInformacion/SearchBar';
 
 export default function ViewNews() {
   const { user, loading: userLoading } = useContext(UserContext);
@@ -20,6 +21,7 @@ export default function ViewNews() {
   const [editingNews, setEditingNews] = useState(null);
   const [notification, setNotification] = useState({ show: false, message: '', variant: 'success' });
   const [itemToDelete, setItemToDelete] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
 
   const showNotification = (message, variant = 'success') => {
     setNotification({ show: true, message, variant });
@@ -69,10 +71,7 @@ export default function ViewNews() {
     fetchNews();
   };
 
-  const handleDelete = (newsId) => {
-    setItemToDelete(newsId);
-  };
-
+  const handleDelete = (newsId) => setItemToDelete(newsId);
   const handleConfirmDelete = async () => {
     if (itemToDelete) {
       await DeleteNews(itemToDelete);
@@ -82,47 +81,53 @@ export default function ViewNews() {
     setItemToDelete(null);
   };
 
-  const handleEdit = (newsItem) => {
-    setEditingNews(newsItem);
-  };
-
-  const handleCancelEdit = () => {
-    setEditingNews(null);
-  };
+  const handleEdit = (newsItem) => setEditingNews(newsItem);
+  const handleCancelEdit = () => setEditingNews(null);
 
   const renderContent = () => {
-    if (loading) {
-      return <div className="text-center p-5"><Spinner animation="border" /></div>;
+    if (loading) return <div className="text-center p-5"><Spinner animation="border" /></div>;
+    if (error) return <Alert variant="danger">{error}</Alert>;
+
+    // 🔍 Filtrar por estado (published, draft, archived)
+    let filteredNews = allNews.filter(news => news.status === activeTab);
+
+    // 🔍 Filtrar por texto del buscador (título, contenido, etc.)
+    if (searchQuery.trim() !== '') {
+      const normalize = (str) =>
+        str.normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+
+      filteredNews = filteredNews.filter(news =>
+        (news.title && normalize(news.title).includes(normalize(searchQuery))) ||
+        (news.content && normalize(news.content).includes(normalize(searchQuery)))
+      );
+
     }
-    if (error) {
-      return <Alert variant="danger">{error}</Alert>;
-    }
-    const filteredNews = allNews.filter(news => news.status === activeTab);
+
     return (
-      <NewsList
-        newsItems={filteredNews}
-        user={user}
-        onDelete={handleDelete}
-        onArchive={(newsId) => handleUpdateStatus(newsId, 'archived')}
-        onPublish={(newsId) => handleUpdateStatus(newsId, 'published')}
-        onEdit={handleEdit}
-      />
+      <>
+        <SearchBar
+          onSearch={setSearchQuery}
+          placeholder={`Buscar en novedades...`}
+        />
+        <NewsList
+          newsItems={filteredNews}
+          user={user}
+          onDelete={handleDelete}
+          onArchive={(newsId) => handleUpdateStatus(newsId, 'archived')}
+          onPublish={(newsId) => handleUpdateStatus(newsId, 'published')}
+          onEdit={handleEdit}
+        />
+      </>
     );
   };
 
-  if (userLoading) {
-    return <div className="text-center mt-5"><Spinner animation="border" /></div>;
-  }
+
+  if (userLoading) return <div className="text-center mt-5"><Spinner animation="border" /></div>;
 
   return (
     <div className="container mt-4">
-      <AlertaNotificacion
-        show={notification.show}
-        message={notification.message}
-        variant={notification.variant}
-        onClose={() => setNotification({ ...notification, show: false })}
-      />
-      <ModalConfirmacion 
+      <AlertaNotificacion {...notification} onClose={() => setNotification({ ...notification, show: false })} />
+      <ModalConfirmacion
         show={itemToDelete !== null}
         onHide={() => setItemToDelete(null)}
         onConfirm={handleConfirmDelete}
@@ -138,14 +143,14 @@ export default function ViewNews() {
             onCancelEdit={handleCancelEdit}
           />
         </div>
-
         <div className="col-lg-8">
           <ul className="nav nav-tabs mb-3">
             <li className="nav-item">
               <button className={`nav-link ${activeTab === 'published' ? 'active' : ''}`} onClick={() => setActiveTab('published')}>Publicadas</button>
             </li>
             <li className="nav-item">
-                                  <button className={`nav-link ${activeTab === 'draft' ? 'active' : ''}`} onClick={() => setActiveTab('draft')}>Borradores</button>            </li>
+              <button className={`nav-link ${activeTab === 'draft' ? 'active' : ''}`} onClick={() => setActiveTab('draft')}>Borradores</button>
+            </li>
             <li className="nav-item">
               <button className={`nav-link ${activeTab === 'archived' ? 'active' : ''}`} onClick={() => setActiveTab('archived')}>Archivadas</button>
             </li>
