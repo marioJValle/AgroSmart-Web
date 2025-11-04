@@ -1,4 +1,3 @@
-import React from 'react';
 
 // Componente "tonto" que solo renderiza la lista de noticias que recibe
 export default function NewsList({ newsItems, user, onDelete, onArchive, onPublish, onEdit }) {

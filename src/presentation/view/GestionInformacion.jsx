@@ -9,12 +9,14 @@ import AlertaNotificacion from '../components/gestionInformacion/AlertaNotificac
 import { cultivosManager } from '../../domain/useCases/cultivosUseCases/cultivosManager';
 import { fertilizantesManager } from '../../domain/useCases/fertilizantesUseCases/fertilizantesManager';
 import { deficienciasManager } from '../../domain/useCases/deficienciasUseCases/deficienciasManager';
+import SearchBar from '../components/gestionInformacion/SearchBar';
 
 
 // Column and Field Definitions
 const definitions = {
   cultivos: {
     columns: [
+      { header: 'Imagen', key: 'imageCrop' }, // Nueva columna para la imagen
       { header: 'Nombre', key: 'name' },
       { header: 'Descripción', key: 'description' },
       { header: 'Tipo', key: 'type' },
@@ -26,10 +28,12 @@ const definitions = {
       { label: 'Tipo', name: 'type', type: 'text' },
       { label: 'Tiempo de Cosecha', name: 'harvestTime', type: 'text' },
     ],
-    modalTitle: 'Cultivo'
+    modalTitle: 'Cultivo',
+    imageField: 'imageCrop' // Campo para la imagen
   },
   fertilizantes: {
     columns: [
+      { header: 'Imagen', key: 'imageFertilizers' }, // Nueva columna para la imagen
       { header: 'Nombre', key: 'name' },
       { header: 'Tipo', key: 'type' },
       { header: 'Descripción', key: 'description' },
@@ -45,10 +49,12 @@ const definitions = {
       { label: 'Proveedor', name: 'supplier', type: 'text' },
       { label: 'Metodo de aplicacion', name: 'applicationMethod', type: 'text' },
     ],
-    modalTitle: 'Fertilizante'
+    modalTitle: 'Fertilizante',
+    imageField: 'imageFertilizers' // Campo para la imagen
   },
   deficiencias: {
     columns: [
+      { header: 'Imagen', key: 'imageDeficiencies' }, // Nueva columna para la imagen
       { header: 'Título', key: 'title' },
       { header: 'Descripción', key: 'description' },
       { header: 'Síntomas', key: 'symptoms' },
@@ -60,7 +66,8 @@ const definitions = {
       { label: 'Síntomas', name: 'symptoms', type: 'text' },
       { label: 'Soluciones', name: 'solutions', type: 'text' },
     ],
-    modalTitle: 'Deficiencia Nutricional'
+    modalTitle: 'Deficiencia Nutricional',
+    imageField: 'imageDeficiencies' // Campo para la imagen
   }
 };
 
@@ -81,6 +88,7 @@ const GestionInformacion = () => {
   const [formData, setFormData] = useState({});
   const [isEditing, setIsEditing] = useState(false);
   const [alert, setAlert] = useState({ show: false, message: '', variant: 'success' });
+  const [searchQuery, setSearchQuery] = useState(''); // Estado para la búsqueda
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,6 +99,13 @@ const GestionInformacion = () => {
     };
     fetchData();
   }, [key]);
+
+  // Filtrar datos según la búsqueda
+  const filteredData = data[key].filter(item =>
+    Object.values(item).some(value =>
+      String(value).toLowerCase().includes(searchQuery.toLowerCase())
+    )
+  );
 
   const showAlert = (message, variant = 'success') => {
     setAlert({ show: true, message, variant });
@@ -206,6 +221,11 @@ const GestionInformacion = () => {
 
       <BotonCrear onClick={handleShowFormModal} />
 
+      <SearchBar 
+        onSearch={setSearchQuery} 
+        placeholder={`Buscar en ${definitions[key].modalTitle}...`}
+      />
+
       <Tabs
         id="gestion-informacion-tabs"
         activeKey={key}
@@ -216,9 +236,10 @@ const GestionInformacion = () => {
           <Tab eventKey={tabKey} title={definitions[tabKey].modalTitle} key={tabKey}>
             <TablaDatos
               columns={definitions[tabKey].columns}
-              data={data[tabKey]}
+              data={filteredData} // Usar datos filtrados
               onEdit={handleEdit}
               onDelete={handleDelete}
+              searchQuery={searchQuery} // Pasar la consulta para el mensaje de "no hay datos"
             />
           </Tab>
         ))}
@@ -232,6 +253,7 @@ const GestionInformacion = () => {
         setFormData={setFormData}
         fields={currentDefinition.fields}
         title={`${isEditing ? 'Editar' : 'Crear'} ${currentDefinition.modalTitle}`}
+        imageField={currentDefinition.imageField} // Pasar el campo de imagen
       />
 
       <ModalConfirmacion
