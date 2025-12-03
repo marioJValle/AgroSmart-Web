@@ -11,13 +11,8 @@ export default function UserManagementTable({
   handleEdit,
   handleSaveEdit,
   cancelEdit,
-  avatarSrc,
 }) {
-  const currentUser = users || {
-    name: " User Example",
-    email: " User@example.com ",
-    avatar: "https://via.placeholder.com/150",
-  };
+  const placeholderAvatar = "https://via.placeholder.com/150";
 
   return (
     <div className="card shadow-sm mb-4">
@@ -48,7 +43,7 @@ export default function UserManagementTable({
                   >
                     <td>
                       <img
-                        src={avatarSrc || currentUser.avatar}
+                        src={user.photoURL || placeholderAvatar}
                         alt="avatar"
                         className="rounded-circle me-2"
                         width="40"

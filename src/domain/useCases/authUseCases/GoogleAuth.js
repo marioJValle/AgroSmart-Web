@@ -28,7 +28,7 @@ const GoogleAuth = async () => {
         soilTypes: '',
         status: 'activo',
         role: 'Agricultor',
-        department: 'Juigalpa'
+        department: 'Chontales'
       });
     } else {
       console.log("GoogleAuth: User already exists. Skipping creation.");
