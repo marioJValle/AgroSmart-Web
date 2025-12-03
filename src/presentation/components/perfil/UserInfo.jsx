@@ -1,16 +1,15 @@
+import React from 'react';
+import { Card, ListGroup, Button, Form } from 'react-bootstrap';
 
-import React, { useState } from 'react';
-import { Card, ListGroup, Button, Form, Alert } from 'react-bootstrap';
-import { UserRepository } from '../../../data/repositories/userRepository/UserRepository';
-
-const repository = new UserRepository();
-
-const UserInfo = ({ user }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [editedUser, setEditedUser] = useState(user);
-  const [showAlert, setShowAlert] = useState(false);
-  const [alertVariant, setAlertVariant] = useState('');
-  const [alertMessage, setAlertMessage] = useState('');
+const UserInfo = ({ 
+  user, 
+  isEditing, 
+  editedUser, 
+  handleEditClick, 
+  handleCancelClick, 
+  handleSaveClick, 
+  handleChange 
+}) => {
 
   // Placeholder user data if not provided
   const currentUser = user || {
@@ -20,39 +19,6 @@ const UserInfo = ({ user }) => {
     phoneNumber: 'N/A',
     username: 'User Example',
     email: 'user@example.com'
-  };
-
-  const handleEditClick = () => {
-    setIsEditing(true);
-    setEditedUser(user);
-  };
-
-  const handleCancelClick = () => {
-    setIsEditing(false);
-    setEditedUser(user);
-    setShowAlert(false); // Ocultar alerta al cancelar
-  };
-
-  const handleSaveClick = async () => {
-    try {
-      await repository.updateUser(editedUser.id, editedUser);
-      setAlertVariant('success');
-      setAlertMessage('¡Cambios guardados con éxito!');
-      setShowAlert(true);
-      setIsEditing(false);
-      // Opcional: Actualizar el estado global del usuario si es necesario
-      // setUser(editedUser); // Si UserContext tiene un setUser
-    } catch (error) {
-      console.error('Error al guardar los cambios:', error);
-      setAlertVariant('danger');
-      setAlertMessage('Error al guardar los cambios. Inténtalo de nuevo.');
-      setShowAlert(true);
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setEditedUser(prev => ({ ...prev, [name]: value }));
   };
 
   return (
@@ -69,11 +35,6 @@ const UserInfo = ({ user }) => {
         )}
       </Card.Header>
       <Card.Body>
-        {showAlert && (
-          <Alert variant={alertVariant} onClose={() => setShowAlert(false)} dismissible>
-            {alertMessage}
-          </Alert>
-        )}
         <ListGroup variant="flush">
           <ListGroup.Item>
             <strong>Nombre de Usuario:</strong>

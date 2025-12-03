@@ -1,0 +1,54 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Dependency directories
+node_modules/
+/dist
+/build
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# macOS specific files
+.DS_Store
+
+# Thumbnails
+.thumbs/
+
+# Test coverage
+coverage/
+
+# Misc
+*.bak
+*.swp
+*.swo
+
+# Vite specific
+.vite/
+
+# Firebase specific
+firebase-debug.log
+firebase-debug.*.log
+.firebase/
+*.env.local
+
+# Eslint cache
+.eslintcache
+
+# pnpm-lock.yaml
+pnpm-lock.yaml

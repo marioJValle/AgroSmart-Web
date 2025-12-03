@@ -1,4 +1,4 @@
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, doc, deleteDoc } from "firebase/firestore";
 import { db } from "../../../data/database/Firebase";
 
 export class FotografiasRepository {
@@ -13,5 +13,10 @@ export class FotografiasRepository {
             fotografias.push({ id: doc.id, ...doc.data() });
         });
         return fotografias;
+    }
+
+    async deleteFotografia(id) {
+        const docRef = doc(db, "DetectionResult", id);
+        await deleteDoc(docRef);
     }
 }
