@@ -1,4 +1,6 @@
 import Pagination from "./Pagination";
+import { format } from "date-fns";
+import placeholderAvatar from "../../../assets/Img/Isotipo.svg";
 
 export default function UserManagementTable({
   users,
@@ -12,8 +14,6 @@ export default function UserManagementTable({
   handleSaveEdit,
   cancelEdit,
 }) {
-  const placeholderAvatar = "https://via.placeholder.com/150";
-
   return (
     <div className="card shadow-sm mb-4">
       <div className="card-body">
@@ -111,7 +111,11 @@ export default function UserManagementTable({
                         {user.status}
                       </span>
                     </td>
-                    <td>{user.ultimoAcceso}</td>
+                    <td>
+                      {user.lastSignInTime
+                        ? format(new Date(user.lastSignInTime), "dd/MM/yyyy p")
+                        : "-"}
+                    </td>
                     <td>
                       {editingUserId === user.id ? (
                         <>

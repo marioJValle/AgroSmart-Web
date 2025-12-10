@@ -48,10 +48,21 @@ export class UserRepository {
         const userSnapshot = await getDocs(this.userCollection);
         const users = [];
         userSnapshot.forEach((doc) => {
+            const data = doc.data();
             users.push(
                 new User({
                     id: doc.id,
-                    ...doc.data(),
+                    uid: data.uid,
+                    username: data.username,
+                    email: data.email,
+                    phoneNumber: data.phoneNumber,
+                    municipality: data.municipality,
+                    soilTypes: data.soilTypes,
+                    status: data.status,
+                    role: data.role,
+                    department: data.department,
+                    photoURL: data.photoURL,
+                    lastSignInTime: data.lastSignInTime,
                 })
             );
         });

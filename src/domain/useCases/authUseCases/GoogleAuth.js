@@ -9,6 +9,7 @@ const GoogleAuth = async () => {
   try {
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
+    const { metadata, photoURL } = user;
     console.log("GoogleAuth: User authenticated with Google:", user);
 
     const userRepository = new UserRepository();
@@ -19,7 +20,7 @@ const GoogleAuth = async () => {
     if (!existingUser) {
       console.log("GoogleAuth: No existing user found. Creating new user...");
       await CreateUser({
-        id: user.email,        // ✅ Usa UID, no email
+        id: user.uid,
         uid: user.uid,
         username: user.displayName,
         email: user.email,
@@ -28,10 +29,16 @@ const GoogleAuth = async () => {
         soilTypes: '',
         status: 'activo',
         role: 'Agricultor',
-        department: 'Chontales'
+        department: 'Chontales',
+        photoURL: photoURL,
+        lastSignInTime: metadata.lastSignInTime,
       });
     } else {
-      console.log("GoogleAuth: User already exists. Skipping creation.");
+      console.log("GoogleAuth: User already exists. Updating photoURL and lastSignInTime.");
+      await userRepository.updateUser(existingUser.id, {
+        photoURL: photoURL,
+        lastSignInTime: metadata.lastSignInTime,
+      });
     }
 
     console.log("GoogleAuth: Authentication process finished.");

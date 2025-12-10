@@ -108,11 +108,7 @@ const Header = () => {
                 Inicio
               </Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/mis-cultivos">
-                Mis Cultivos
-              </Link>
-            </li>
+             
             <li className="nav-item">
               <Link className="nav-link" to="/dashboard/profile">
                 Perfil
